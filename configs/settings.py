@@ -108,12 +108,14 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
+import pytz
 
-TIME_ZONE = 'UTC'
+
+TIME_ZONE = 'Asia/Almaty'
+USE_TZ = True
 
 USE_I18N = True
 
-USE_TZ = True
 
 SCHEDULER_AUTOSTART = True
 SCHEDULER_RUN_AT_STARTUP = True

@@ -1,3 +1,4 @@
+from configs.settings import MEDIA_ROOT
 import qrcode
 import os
 from datetime import datetime
@@ -22,8 +23,12 @@ def generate_qr():
     return cache.set('code', code)
 
 
+def clearMedia():
+    for image in os.listdir(MEDIA_ROOT):
+        os.remove(os.path.join(MEDIA_ROOT, image))
 
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(generate_qr, 'interval', seconds=30)
+scheduler.add_job(generate_qr, 'interval', seconds=10)
+scheduler.add_job(clearMedia, 'cron', hour=0)
 scheduler.start()
