@@ -1,5 +1,7 @@
 from django.contrib.auth import authenticate, login
-
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import user_passes_test
+from .models import Visit
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound
 from datetime import datetime
@@ -28,8 +30,17 @@ def index(request, secret_key):
 
 
 def home(request):
-    return HttpResponse('успех')
-
+    username = 'Юзер'
+    user = 0
+    try:
+        user_id = request.user.id
+        username = request.user.username
+        user = User.objects.get(id=user_id)
+        visit = Visit.objects.create(user=user)
+        visit.save()
+    finally:
+        return HttpResponse(f'успех {username}, {user_id}')
+@user_passes_test(lambda u: u.is_superuser)
 def qr(request):
     date = datetime.now().date()
     image = f'{date}.png'
