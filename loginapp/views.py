@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
-
+from django.contrib.auth.decorators import user_passes_test
 from .models import Visit
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound
@@ -40,7 +40,7 @@ def home(request):
         visit.save()
     finally:
         return HttpResponse(f'успех {username}, {user_id}')
-
+@user_passes_test(lambda u: u.is_superuser)
 def qr(request):
     date = datetime.now().date()
     image = f'{date}.png'

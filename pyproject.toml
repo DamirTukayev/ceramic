@@ -10,6 +10,7 @@ django = "^4.2"
 qrcode = "^7.4.2"
 apscheduler = "^3.10.1"
 django-apscheduler = "^0.6.2"
+pytz = "^2023.3"
 
 [tool.poetry.dev-dependencies]
 
