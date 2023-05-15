@@ -9,6 +9,9 @@ from .services import generate_qr
 from django.urls import reverse
 from django.core.cache import cache
 
+def base(request):
+    return render(request, "loginapp/base.html")
+
 def index(request, secret_key):
     code = cache.get('code')
     if secret_key == str(code):
@@ -40,6 +43,7 @@ def home(request):
         visit.save()
     finally:
         return HttpResponse(f'успех {username}, {user_id}')
+
 @user_passes_test(lambda u: u.is_superuser)
 def qr(request):
     date = datetime.now().date()

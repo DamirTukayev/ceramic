@@ -1,13 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
+  {% block title %}QR Code{% endblock %}
+
+  {% block content %}
     <h4>Ваш QR код:</h4>
     <img src="/media/{{image}}">
-
-</body>
-</html>
+  {% endblock %}
