@@ -3,6 +3,8 @@
   {% block title %}QR Code{% endblock %}
 
   {% block content %}
-    <h4>Ваш QR код:</h4>
-    <img src="/media/{{image}}">
+    <div class="qr">
+      <div class="qr__text">Отсканируйте QR</div>
+      <img src="/media/{{image}}">
+    </div>
   {% endblock %}

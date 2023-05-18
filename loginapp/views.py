@@ -8,6 +8,7 @@ from datetime import datetime
 from .services import generate_qr
 from django.urls import reverse
 from django.core.cache import cache
+from django.template import loader
 
 def base(request):
     return render(request, "loginapp/base.html")
@@ -42,7 +43,11 @@ def home(request):
         visit = Visit.objects.create(user=user)
         visit.save()
     finally:
-        return HttpResponse(f'успех {username}, {user_id}')
+        message = f"Пользователь {username}, сегодня авторизовался"
+    
+        template = loader.get_template('loginapp/success.html')
+        context = {'message': message}
+        return HttpResponse(template.render(context, request))
 
 @user_passes_test(lambda u: u.is_superuser)
 def qr(request):
