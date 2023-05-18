@@ -30,7 +30,15 @@ def index(request, secret_key):
 
             # If request method is GET, show the login form
         return render(request, 'loginapp/login.html')
-    return HttpResponseNotFound(f'как вы сюда попали? вот {code}')
+    message = f"Отсканируйте QR снова"
+    template = loader.get_template('loginapp/success.html')
+    url = code
+    context = {
+        'message': message,
+        'url': url
+    }
+
+    return HttpResponse(template.render(context, request))
 
 
 def home(request):

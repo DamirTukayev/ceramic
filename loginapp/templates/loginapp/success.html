@@ -3,5 +3,10 @@
   {% block title %}Посещение{% endblock %}
 
   {% block content %}
-    <div class="success-message">{{ message }}</div>
+  <div class="success-message">
+      {{ message }},
+      {% if url %}
+          <a href="{{ url }}">перейти</a>
+      {% endif %}
+  </div>
   {% endblock %}
