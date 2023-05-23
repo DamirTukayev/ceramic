@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import user_passes_test
 from .models import Visit
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound
-from datetime import datetime
+from datetime import datetime, timedelta
 from .services import generate_qr
 from django.urls import reverse
 from django.core.cache import cache
@@ -22,8 +22,10 @@ def index(request, secret_key):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
-                # Redirect to a success page.
-                return redirect(reverse('home'))
+                expiration_date = datetime.now() + timedelta(days=7)
+                response = redirect(reverse('home'))
+                response.set_cookie('username', username, expires=expiration_date)
+                return response
             else:
                 # Return an 'invalid login' error message.
                 return HttpResponse("Invalid login.")
