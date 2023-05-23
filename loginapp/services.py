@@ -11,8 +11,12 @@ def set_url():
     code = randint(1, 40000)
     return code
 
-
-
+def get_cookie(request):
+    try:
+        username = request.COOKIES["username"]
+        return username
+    finally:
+        return None
 
 def generate_qr():
     code = set_url()
@@ -29,6 +33,6 @@ def clearMedia():
 
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(generate_qr, 'interval', seconds=30)
+scheduler.add_job(generate_qr, 'interval', seconds=10)
 scheduler.add_job(clearMedia, 'cron', hour=0)
 scheduler.start()
