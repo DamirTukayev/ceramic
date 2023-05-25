@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<form method="GET" action="{% url 'admin' %}">
+  <input type="text" name="search" placeholder="Search by name or date" value="{{ request.GET.search }}">
+  <input type="date" name="date" value="{{ request.GET.date }}">
+  <button type="submit">Search</button>
+</form>
+
+<table>
+  <thead>
+    <tr>
+        <th>Имя</th>
+        <th>Фамилия</th>
+      <th>дата</th>
+      <th>время</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in visits %}
+    <tr>
+      <td>{{ item.user.first_name }}</td>
+        <td>{{item.user.last_name}}</td>
+      <td>{{ item.date }}</td>
+      <td>{{ item.time }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+</body>
+</html>

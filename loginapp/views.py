@@ -4,33 +4,47 @@ from django.contrib.auth.decorators import user_passes_test
 from .models import Visit
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound
-from datetime import datetime, timedelta
-from .services import generate_qr
+from datetime import datetime, timedelta, date
+from .services import generate_qr, get_cookie, check_status
 from django.urls import reverse
 from django.core.cache import cache
 from django.template import loader
+from django.db.models import Q
+
 
 def base(request):
     return render(request, "loginapp/base.html")
 
+
 def index(request, secret_key):
     code = cache.get('code')
     if secret_key == str(code):
-        if request.method == 'POST':
-            username = request.POST['username']
-            password = request.POST['password']
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-                login(request, user)
-                expiration_date = datetime.now() + timedelta(days=7)
-                response = redirect(reverse('home'))
-                response.set_cookie('username', username, expires=expiration_date)
-                return response
-            else:
-                # Return an 'invalid login' error message.
-                return HttpResponse("Invalid login.")
+        if request.user.is_authenticated == False:
+            if request.method == 'POST':
+                username = request.POST['username']
+                password = request.POST['password']
+                user = authenticate(request, username=username, password=password)
+                if user is not None:
+                    login(request, user)
+                    expiration_date = datetime.now() + timedelta(days=7)
 
-            # If request method is GET, show the login form
+                    if check_status(username):
+                        response = redirect(reverse('admin'))
+                    else:
+                        response = redirect(reverse('home'))
+                    response.set_cookie('username', username, expires=expiration_date)
+                    return response
+                else:
+                    # Return an 'invalid login' error message.
+                    return HttpResponse("Invalid login.")
+
+                # If request method is GET, show the login form
+
+        else:
+            if check_status:
+                return redirect(reverse('admin'))
+            else:
+                return redirect(reverse('home'))
         return render(request, 'loginapp/login.html')
     message = f"Отсканируйте QR снова"
     template = loader.get_template('loginapp/success.html')
@@ -44,23 +58,48 @@ def index(request, secret_key):
 
 
 def home(request):
-    username = 'Юзер'
-    user = 0
-    try:
-        user_id = request.user.id
-        username = request.user.username
-        user = User.objects.get(id=user_id)
+    user_id = request.user.id
+    username = request.user.username
+    user = User.objects.get(id=user_id)
+    current_date = date.today()
+    todayVisit = Visit.objects.filter(Q(user=user) & Q(date=current_date))
+    if todayVisit.exists() == False:
         visit = Visit.objects.create(user=user)
         visit.save()
-    finally:
-        message = f"Пользователь {username}, сегодня авторизовался"
-    
-        template = loader.get_template('loginapp/success.html')
-        context = {'message': message}
-        return HttpResponse(template.render(context, request))
+    message = f"Пользователь {username}, сегодня авторизовался"
+
+    template = loader.get_template('loginapp/success.html')
+    context = {'message': message}
+    return HttpResponse(template.render(context, request))
+
 
 @user_passes_test(lambda u: u.is_superuser)
 def qr(request):
     date = datetime.now().date()
     image = f'{date}.png'
     return render(request, 'loginapp/qr.html', {'image': image})
+
+@user_passes_test(lambda u: u.is_superuser)
+def admin(request):
+    # Retrieve the search query from the request GET parameters
+    search_query = request.GET.get('search', '')
+
+    # Retrieve the date filter from the request GET parameters
+    date_filter = request.GET.get('date', '')
+
+    # Retrieve all visits
+    visits = Visit.objects.all()
+
+    # Apply search filter if a search query is provided
+    if search_query:
+        visits = visits.filter(
+            Q(user__first_name__icontains=search_query) |  # Filter by name containing the search query
+            Q(date__icontains=search_query)  # Filter by date containing the search query
+        )
+
+    # Apply date filter if a date is provided
+    if date_filter:
+        visits = visits.filter(date=date_filter)
+
+    context = {'visits': visits}
+    return render(request, 'loginapp/admin.html', context)
