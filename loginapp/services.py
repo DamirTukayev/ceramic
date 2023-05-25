@@ -6,7 +6,7 @@ from django.conf import settings
 from random import randint
 from apscheduler.schedulers.background import BackgroundScheduler
 from django.core.cache import cache
-
+from .models import User
 def set_url():
     code = randint(1, 40000)
     return code
@@ -17,6 +17,12 @@ def get_cookie(request):
         return username
     finally:
         return None
+
+
+def check_status(username):
+    user = User.objects.get(username=username)
+    if user.is_superuser==True:
+        return True
 
 def generate_qr():
     code = set_url()
