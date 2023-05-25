@@ -66,8 +66,12 @@ def home(request):
     if todayVisit.exists() == False:
         visit = Visit.objects.create(user=user)
         visit.save()
-    message = f"Пользователь {username}, сегодня авторизовался"
-
+        message = f"Пользователь {username}, сегодня авторизовался"
+    else:
+        visit = todayVisit[0]
+        visit.leaving_time =datetime.now().time()
+        visit.save()
+        message = f"Пользователь {username}, успешно вышел"
     template = loader.get_template('loginapp/success.html')
     context = {'message': message}
     return HttpResponse(template.render(context, request))
@@ -83,7 +87,7 @@ def qr(request):
 def admin(request):
     # Retrieve the search query from the request GET parameters
     search_query = request.GET.get('search', '')
-
+    sort_by = request.GET.get('sort')
     # Retrieve the date filter from the request GET parameters
     date_filter = request.GET.get('date', '')
 
@@ -92,14 +96,21 @@ def admin(request):
 
     # Apply search filter if a search query is provided
     if search_query:
-        visits = visits.filter(
+        search_results = visits.filter(
             Q(user__first_name__icontains=search_query) |  # Filter by name containing the search query
             Q(date__icontains=search_query)  # Filter by date containing the search query
         )
+    else:
+        search_results = visits
 
     # Apply date filter if a date is provided
     if date_filter:
-        visits = visits.filter(date=date_filter)
+        visits = search_results.filter(date=date_filter)
+    else:
+        visits = search_results
+
+    if sort_by:
+        visits = search_results.order_by(sort_by)
 
     context = {'visits': visits}
     return render(request, 'loginapp/admin.html', context)
