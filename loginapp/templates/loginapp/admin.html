@@ -1,37 +1,59 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "loginapp/base.html" %}
 
-<form method="GET" action="{% url 'admin' %}">
-  <input type="text" name="search" placeholder="Search by name or date" value="{{ request.GET.search }}">
-  <input type="date" name="date" value="{{ request.GET.date }}">
-  <button type="submit">Search</button>
-</form>
+{% block title %}Посещение{% endblock %}
 
-<table>
-  <thead>
-    <tr>
+{% block content %}
+<div class="admin-page">
+  <form method="GET" action="{% url 'admin' %}" class="form-table">
+    <input type="text" name="search" placeholder="Поиск по имени или дате" value="{{ request.GET.search }}">
+    <input type="date" name="date" value="{{ request.GET.date }}">
+    <button type="submit">Поиск</button>
+  </form>
+  
+  <table>
+    <thead>
+      <tr>
         <th>Имя</th>
         <th>Фамилия</th>
-      <th>дата</th>
-      <th>время</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for item in visits %}
-    <tr>
-      <td>{{ item.user.first_name }}</td>
+        <th>дата</th>
+        <th>Время входа (опоздание)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in visits %}
+      <tr>
+        <td>{{ item.user.first_name }}</td>
         <td>{{item.user.last_name}}</td>
-      <td>{{ item.date }}</td>
-      <td>{{ item.time }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+        <td>{{ item.date }}</td>
+        <td class="time">{{ item.time|time:"H:i" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 
-</body>
-</html>
+<script>
+const timeCellAll = document.querySelectorAll(".time");
+
+timeCellAll.forEach(timeCell => {
+  const timeValue = timeCell.textContent;
+  const [hours, minutes] = timeValue.split(":").map(Number);
+
+  const lateMinutes = (hours - 10) * 60 + minutes;
+
+  if (lateMinutes > 0) {
+    const updatedTimeValue = `${timeValue} (${formatLateMinutes(lateMinutes)})`;
+    timeCell.textContent = updatedTimeValue;
+  }
+});
+
+function formatLateMinutes(minutes) {
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+  return `${hours}:${remainingMinutes.toString().padStart(2, "0")}`;
+}
+
+</script>
+
+{% endblock %}
+
