@@ -70,13 +70,12 @@ def home(request):
         message = f"Пользователь {username}, сегодня авторизовался"
     else:
         visit = todayVisit[0]
-        visit.leaving_time =datetime.now().time()
+        visit.leaving_time = datetime.now().time()
         visit.save()
         message = f"Пользователь {username}, успешно вышел"
     template = loader.get_template('loginapp/success.html')
     context = {'message': message}
     return HttpResponse(template.render(context, request))
-
 
 @user_passes_test(lambda u: u.is_superuser)
 def qr(request):
@@ -87,29 +86,40 @@ def qr(request):
 @user_passes_test(lambda u: u.is_superuser)
 def admin(request):
     form = UserFilterForm(request.GET or None)
-    # Retrieve the search query from the request GET parameters
     search_query = request.GET.get('search', '')
 
+
     # Retrieve the date filter from the request GET parameters
+
     date_filter = request.GET.get('date', '')
+    sort_by = request.GET.get('sort_by', '')
 
-    # Retrieve all visits
     visits = Visit.objects.all()
-
-    # Apply search filter if a search query is provided
+    visits = visits.order_by('-date')
+    if sort_by == 'first_name':
+        visits = visits.order_by('user__first_name')
+    elif sort_by == 'last_name':
+        visits = visits.order_by('user__last_name')
+    elif sort_by == 'date':
+        visits = visits.order_by('date')
+    elif sort_by == 'arrival_time':
+        visits = visits.order_by('arrival_time')
+    elif sort_by == 'living_time':
+        visits = visits.order_by('leaving_time')
     if search_query:
         visits = visits.filter(
             Q(user__first_name__icontains=search_query) |  # Filter by name containing the search query
             Q(date__icontains=search_query)  # Filter by date containing the search query
         )
 
-    # Apply date filter if a date is provided
     if date_filter:
         visits = visits.filter(date=date_filter)
 
+
     if form.is_valid():
-        selected_user_last_name = form.cleaned_data['users']
-        visits = visits.filter(user=selected_user_last_name)
+        selected_user = form.cleaned_data['users']
+        if selected_user:
+            visits = visits.filter(user=selected_user)
 
     context = {'visits': visits, 'form': form}
     return render(request, 'loginapp/admin.html', context)
