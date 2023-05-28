@@ -1,24 +1,33 @@
-<<<<<<< HEAD
+
 {% extends "loginapp/base.html" %}
 
 {% block title %}Посещение{% endblock %}
 
 {% block content %}
+
 <div class="admin-page">
   <form method="GET" action="{% url 'admin' %}" class="form-table">
-    {{ form.as_p }}
+     <select name="users">
+  <option value="">Выберите пользователя</option>
+  {% for user in form.users.field.queryset %}
+    <option value="{{ user.username }}">{{ user.last_name }}</option>
+  {% endfor %}
+</select>
+
     <input type="text" name="search" placeholder="Поиск по имени или дате" value="{{ request.GET.search }}">
     <input type="date" name="date" value="{{ request.GET.date }}">
     <button type="submit">Поиск</button>
   </form>
-  
+{{ formset.errors }}  {{ formset.non_field_errors }}  {{ form.errors }}  {{ form.non_field_errors }}
+
+
   <table>
     <thead>
       <tr>
-        <th><div>Имя</div> <img src="/media/icons/sort.svg"></th>
-        <th><div>Фамилия</div> <img src="/media/icons/sort.svg"></th>
-        <th><div>Дата</div> <img src="/media/icons/sort.svg"></th>
-        <th><div>Время входа (опоздание)</div><img src="/media/icons/sort.svg"></th>
+        <th><div>Имя</div> <img src="/media/icons/sort.png" width="30px"></th>
+        <th><div>Фамилия</div> <img src="/media/icons/sort.png" width="30px"></th>
+        <th><div>Дата</div> <img src="/media/icons/sort.png"width="30px"></th>
+        <th><div>Время входа (опоздание)</div><img src="/media/icons/sort.png" width="30px"></th>
       </tr>
     </thead>
     <tbody>
@@ -34,6 +43,8 @@
   </table>
 </div>
 
+{{temp}}
+{% endblock %}
 <script>
 const timeCellAll = document.querySelectorAll(".time");
 

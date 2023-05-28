@@ -89,7 +89,7 @@ def admin(request):
     form = UserFilterForm(request.GET or None)
     # Retrieve the search query from the request GET parameters
     search_query = request.GET.get('search', '')
-    sort_by = request.GET.get('sort')
+
     # Retrieve the date filter from the request GET parameters
     date_filter = request.GET.get('date', '')
 
@@ -98,25 +98,18 @@ def admin(request):
 
     # Apply search filter if a search query is provided
     if search_query:
-        search_results = visits.filter(
+        visits = visits.filter(
             Q(user__first_name__icontains=search_query) |  # Filter by name containing the search query
             Q(date__icontains=search_query)  # Filter by date containing the search query
         )
-    else:
-        search_results = visits
 
     # Apply date filter if a date is provided
     if date_filter:
-        visits = search_results.filter(date=date_filter)
-    else:
-        visits = search_results
+        visits = visits.filter(date=date_filter)
 
-    if sort_by:
-        visits = search_results.order_by(sort_by)
-
-    if form.is_valid():  # Проверка валидности формы
-        selected_user = form.cleaned_data['users']  # Получите выбранного пользователя из формы
-        visits = visits.filter(user=selected_user)    
+    if form.is_valid():
+        selected_user_last_name = form.cleaned_data['users']
+        visits = visits.filter(user=selected_user_last_name)
 
     context = {'visits': visits, 'form': form}
     return render(request, 'loginapp/admin.html', context)
