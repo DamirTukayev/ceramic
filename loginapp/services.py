@@ -1,4 +1,5 @@
-from configs.settings import MEDIA_ROOT
+from django.urls import reverse
+from configs.settings import MEDIA_ROOT, HOSTNAME
 import qrcode
 import os
 from datetime import datetime
@@ -7,6 +8,11 @@ from random import randint
 from apscheduler.schedulers.background import BackgroundScheduler
 from django.core.cache import cache
 from .models import User
+from django.shortcuts import redirect
+from django.contrib.auth.decorators import user_passes_test
+
+
+
 def set_url():
     code = randint(1, 40000)
     return code
@@ -24,18 +30,19 @@ def check_status(username):
     if user.is_superuser==True:
         return True
 
+
 def generate_qr():
     code = set_url()
-    url = f'http://127.0.0.1:8000/check/{code}/'
+    url = f'{HOSTNAME}/{code}/'
     img = qrcode.make(url)
     filename = f'{datetime.now().date()}.png'
-    img.save(os.path.join(settings.MEDIA_ROOT, filename))
+    img.save(os.path.join(settings.MEDIA_ROOT + '/qr/', filename))
     return cache.set('code', code)
 
 
 def clearMedia():
     for image in os.listdir(MEDIA_ROOT):
-        os.remove(os.path.join(MEDIA_ROOT, image))
+        os.remove(os.path.join(MEDIA_ROOT + '/qr/', image))
 
 
 scheduler = BackgroundScheduler()

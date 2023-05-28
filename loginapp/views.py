@@ -11,6 +11,9 @@ from django.core.cache import cache
 from django.template import loader
 from django.db.models import Q
 from .forms import UserFilterForm
+from configs.settings import HOSTNAME
+
+
 
 
 def base(request):
@@ -77,17 +80,18 @@ def home(request):
     context = {'message': message}
     return HttpResponse(template.render(context, request))
 
+
 @user_passes_test(lambda u: u.is_superuser)
 def qr(request):
     date = datetime.now().date()
     image = f'{date}.png'
     return render(request, 'loginapp/qr.html', {'image': image})
 
+
 @user_passes_test(lambda u: u.is_superuser)
-def admin(request):
+def ceramic_admin_view(request):
     form = UserFilterForm(request.GET or None)
     search_query = request.GET.get('search', '')
-
 
     # Retrieve the date filter from the request GET parameters
 
@@ -114,7 +118,6 @@ def admin(request):
 
     if date_filter:
         visits = visits.filter(date=date_filter)
-
 
     if form.is_valid():
         selected_user = form.cleaned_data['users']
