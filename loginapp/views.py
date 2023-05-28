@@ -10,7 +10,6 @@ from django.urls import reverse
 from django.core.cache import cache
 from django.template import loader
 from django.db.models import Q
-from .forms import UserFilterForm
 
 
 def base(request):
@@ -70,7 +69,7 @@ def home(request):
         message = f"Пользователь {username}, сегодня авторизовался"
     else:
         visit = todayVisit[0]
-        visit.leaving_time =datetime.now().time()
+        visit.leaving_time = datetime.now().time()
         visit.save()
         message = f"Пользователь {username}, успешно вышел"
     template = loader.get_template('loginapp/success.html')
@@ -84,9 +83,9 @@ def qr(request):
     image = f'{date}.png'
     return render(request, 'loginapp/qr.html', {'image': image})
 
+
 @user_passes_test(lambda u: u.is_superuser)
 def admin(request):
-    form = UserFilterForm(request.GET or None)
     # Retrieve the search query from the request GET parameters
     search_query = request.GET.get('search', '')
     sort_by = request.GET.get('sort')
@@ -113,10 +112,6 @@ def admin(request):
 
     if sort_by:
         visits = search_results.order_by(sort_by)
-
-    if form.is_valid():  # Проверка валидности формы
-        selected_user = form.cleaned_data['users']  # Получите выбранного пользователя из формы
-        visits = visits.filter(user=selected_user)    
-
-    context = {'visits': visits, 'form': form}
+    users = User.objects.values_list('last_name', flat=True)
+    context = {'visits': visits, "users" : users}
     return render(request, 'loginapp/admin.html', context)
