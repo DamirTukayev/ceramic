@@ -9,15 +9,36 @@
     <input type="text" name="search" placeholder="Поиск по имени или дате" value="{{ request.GET.search }}">
     <input type="date" name="date" value="{{ request.GET.date }}">
     <button type="submit">Поиск</button>
+    <a href="{% url 'admin' %}" class="reset-button">Сбросить</a>
   </form>
   
   <table>
     <thead>
       <tr>
-        <th><div>Имя</div> <img src="/media/icons/sort.svg"></th>
-        <th><div>Фамилия</div> <img src="/media/icons/sort.svg"></th>
-        <th><div>Дата</div> <img src="/media/icons/sort.svg"></th>
-        <th><div>Время входа (опоздание)</div><img src="/media/icons/sort.svg"></th>
+        <th>
+          <div>Имя</div>
+          <a href="?sort_by=first_name">
+            <img src="/media/icons/sort.svg" alt="Sort" />
+          </a>
+        </th>
+        <th>
+          <div>Фамилия</div>
+          <a href="?sort_by=last_name">
+            <img src="/media/icons/sort.svg" alt="Sort" />
+          </a>
+        </th>
+        <th>
+          <div>Дата</div>
+          <a href="?sort_by=date">
+            <img src="/media/icons/sort.svg" alt="Sort" />
+          </a>
+        </th>
+        <th>
+          <div>Время входа (опоздание)</div>
+          <a href="?sort_by=time">
+            <img src="/media/icons/sort.svg" alt="Sort" />
+          </a>
+        </th>
       </tr>
     </thead>
     <tbody>

@@ -83,29 +83,34 @@ def qr(request):
 @user_passes_test(lambda u: u.is_superuser)
 def admin(request):
     form = UserFilterForm(request.GET or None)
-    # Retrieve the search query from the request GET parameters
     search_query = request.GET.get('search', '')
-
-    # Retrieve the date filter from the request GET parameters
     date_filter = request.GET.get('date', '')
+    sort_by = request.GET.get('sort_by', '')
 
-    # Retrieve all visits
     visits = Visit.objects.all()
+    visits = visits.order_by('-date')
+    if sort_by == 'first_name':
+        visits = visits.order_by('user__first_name')
+    elif sort_by == 'last_name':
+        visits = visits.order_by('user__last_name')
+    elif sort_by == 'date':
+        visits = visits.order_by('date')
+    elif sort_by == 'time':
+        visits = visits.order_by('time')
 
-    # Apply search filter if a search query is provided
     if search_query:
         visits = visits.filter(
-            Q(user__first_name__icontains=search_query) |  # Filter by name containing the search query
-            Q(date__icontains=search_query)  # Filter by date containing the search query
+            Q(user__first_name__icontains=search_query) |
+            Q(date__icontains=search_query)
         )
 
-    # Apply date filter if a date is provided
     if date_filter:
         visits = visits.filter(date=date_filter)
 
-    if form.is_valid():  # Проверка валидности формы
-        selected_user = form.cleaned_data['users']  # Получите выбранного пользователя из формы
-        visits = visits.filter(user=selected_user)    
+    if form.is_valid():
+        selected_user = form.cleaned_data['users']
+        if selected_user:
+            visits = visits.filter(user=selected_user)
 
     context = {'visits': visits, 'form': form}
     return render(request, 'loginapp/admin.html', context)
