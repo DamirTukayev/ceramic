@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> parent of 9decf74 (added living_time)
 {% extends "loginapp/base.html" %}
 
 {% block title %}Посещение{% endblock %}
@@ -6,7 +9,10 @@
 {% block content %}
 <div class="admin-page">
   <form method="GET" action="{% url 'admin' %}" class="form-table">
+<<<<<<< HEAD
     {{ form.as_p }}
+=======
+>>>>>>> parent of 9decf74 (added living_time)
     <input type="text" name="search" placeholder="Поиск по имени или дате" value="{{ request.GET.search }}">
     <input type="date" name="date" value="{{ request.GET.date }}">
     <button type="submit">Поиск</button>
@@ -57,5 +63,4 @@ function formatLateMinutes(minutes) {
 
 </script>
 {% endblock %}
-</body>
-</html>
+

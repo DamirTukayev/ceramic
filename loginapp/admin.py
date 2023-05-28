@@ -14,7 +14,7 @@ admin.site.register(User, CustomUserAdmin)
 
 
 class CustomVisitAdmin(admin.ModelAdmin):
-    readonly_fields = ['date', 'arrival_time', 'leaving_time']
+    readonly_fields = ['date', 'time']
 
 
 admin.site.register(Visit, CustomVisitAdmin)
