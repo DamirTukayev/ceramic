@@ -85,6 +85,10 @@ th {
   padding: 12px;
   text-align: center;
 }
+th img{
+  margin-top: 16px;
+  cursor: pointer;
+}
 
 tbody tr:nth-child(even) {
   background-color: #bbc8e1;

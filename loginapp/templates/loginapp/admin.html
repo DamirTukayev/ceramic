@@ -5,6 +5,7 @@
 {% block content %}
 <div class="admin-page">
   <form method="GET" action="{% url 'admin' %}" class="form-table">
+    {{ form.as_p }}
     <input type="text" name="search" placeholder="Поиск по имени или дате" value="{{ request.GET.search }}">
     <input type="date" name="date" value="{{ request.GET.date }}">
     <button type="submit">Поиск</button>
@@ -13,10 +14,10 @@
   <table>
     <thead>
       <tr>
-        <th>Имя</th>
-        <th>Фамилия</th>
-        <th>дата</th>
-        <th>Время входа (опоздание)</th>
+        <th><div>Имя</div> <img src="/media/icons/sort.svg"></th>
+        <th><div>Фамилия</div> <img src="/media/icons/sort.svg"></th>
+        <th><div>Дата</div> <img src="/media/icons/sort.svg"></th>
+        <th><div>Время входа (опоздание)</div><img src="/media/icons/sort.svg"></th>
       </tr>
     </thead>
     <tbody>
@@ -39,7 +40,7 @@ timeCellAll.forEach(timeCell => {
   const timeValue = timeCell.textContent;
   const [hours, minutes] = timeValue.split(":").map(Number);
 
-  const lateMinutes = (hours - 10) * 60 + minutes;
+  const lateMinutes = (hours - 9) * 60 + minutes;
 
   if (lateMinutes > 0) {
     const updatedTimeValue = `${timeValue} (${formatLateMinutes(lateMinutes)})`;
