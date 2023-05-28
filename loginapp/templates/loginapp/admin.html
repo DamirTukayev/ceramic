@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends "loginapp/base.html" %}
 
 {% block title %}Посещение{% endblock %}
@@ -55,6 +56,46 @@ function formatLateMinutes(minutes) {
 }
 
 </script>
+=======
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
 
-{% endblock %}
+<form method="GET" action="{% url 'admin' %}">
+  <input type="text" name="search" placeholder="Search by name or date" value="{{ request.GET.search }}">
+  <input type="date" name="date" value="{{ request.GET.date }}">
+  <button type="submit">Search</button>
+</form>
+<table>
+  <thead>
+    <tr>
 
+      <th>Имя</th>
+      <th>Фамилия</th>
+      <th>дата</th>
+      <th>время прихода</th>
+       <th>время ухода</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in visits %}
+    <tr>
+      <td>{{ item.user.first_name }}</td>
+        <td>{{item.user.last_name}}</td>
+      <td>{{ item.date }}</td>
+      <td>{{ item.arrival_time|time:"H:i" }}</td>
+>>>>>>> origin/nurzhan
+
+      <td>{{ item.leaving_time|time:"H:i" }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+</body>
+</html>
