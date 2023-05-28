@@ -5,60 +5,62 @@
 {% block content %}
 
 <div class="admin-page">
-  <form method="GET" action="{% url 'admin' %}" class="form-table">
-     <select name="users">
-  <option value="">Выберите пользователя</option>
-  {% for user in form.users.field.queryset %}
-    <option value="{{ user.id }}">{{ user.last_name }}</option>
-  {% endfor %}
-
-</select>
-
+  <form id="filter-form" method="GET" action="{% url 'admin' %}" class="form-table">
+    <select name="users">
+      <option value="">Выберите пользователя</option>
+      {% for user in form.users.field.queryset %}
+        <option value="{{ user.id }}">{{ user.last_name }}</option>
+      {% endfor %}
+    </select>
+  
     <input type="text" name="search" placeholder="Поиск по имени или дате" value="{{ request.GET.search }}">
     <input type="date" name="date" value="{{ request.GET.date }}">
     <button type="submit">Поиск</button>
-    <a href="{% url 'admin' %}" class="reset-button">Сбросить</a>
+    <a href="{% url 'admin' %}"><button type="button" id="reset-button">Сбросить</button></a>
   </form>
-
-
+  
 
   <table>
     <thead>
       <tr>
-
-        <th>
-          <div>Имя</div>
-          <a href="?sort_by=first_name">
-            <img src="/media/icons/sort.svg" alt="Sort" />
-          </a>
-        </th>
-        <th>
-          <div>Фамилия</div>
-          <a href="?sort_by=last_name">
-            <img src="/media/icons/sort.svg" alt="Sort" />
-          </a>
-        </th>
-        <th>
-          <div>Дата</div>
-          <a href="?sort_by=date">
-            <img src="/media/icons/sort.svg" alt="Sort" />
-          </a>
-        </th>
-        <th>
-          <div>Время входа (опоздание)</div>
-          <a href="?sort_by=arrival_time">
-            <img src="/media/icons/sort.svg" alt="Sort" />
-          </a>
-        </th>
-           <th>
-          <div>Время ухода</div>
-          <a href="?sort_by=leaving_time">
-            <img src="/media/icons/sort.svg" alt="Sort" />
-          </a>
-        </th>
+        <th>Имя</th>
+        <th>Фамилия</th>
+        <th>Дата</th>
+        <th>Время входа</th>
+        <th>Время ухода</th>
+        <th>Время работы</th>
+        <th>Опоздание</th>
+        <th>Переработка</th>
       </tr>
     </thead>
     <tbody>
+      <tr>
+        <td>
+          <a href="?sort_by=first_name">
+            <img src="/media/icons/sort.svg" alt="Sort" />
+          </a>
+        </td>
+        <td>
+          <a href="?sort_by=last_name">
+            <img src="/media/icons/sort.svg" alt="Sort" />
+          </a>
+        </td>
+        <td>
+          <a href="?sort_by=date">
+            <img src="/media/icons/sort.svg" alt="Sort" />
+          </a>
+        </td>
+        <td>
+          <a href="?sort_by=arrival_time">
+            <img src="/media/icons/sort.svg" alt="Sort" />
+          </a>
+        </td>
+        <td>
+          <a href="?sort_by=leaving_time">
+            <img src="/media/icons/sort.svg" alt="Sort" />
+          </a>
+        </td>
+      </tr>
       {% for item in visits %}
       <tr>
         <td>{{ item.user.first_name }}</td>
@@ -66,6 +68,9 @@
         <td>{{ item.date }}</td>
         <td class="time">{{ item.arrival_time|time:"H:i" }}</td>
         <td>{{ item.leaving_time|time:"H:i" }}</td>
+        <td>{{ item.working_time}}</td>
+        <td>{{ item.lateness }}</td>
+        <td>{{ item.recycling }}</td>
       </tr>
       {% endfor %}
     </tbody>
@@ -73,25 +78,13 @@
 </div>
 
 <script>
-const timeCellAll = document.querySelectorAll(".time");
+  document.getElementById('reset-button').addEventListener('click', function() {
+    // Сбросить значения полей формы
+    document.getElementById('filter-form').reset();
+    let input = document.querySelector("#filter-form > input[type=text]:nth-child(2)")
+    input.value = ''
+  });
 
-timeCellAll.forEach(timeCell => {
-  const timeValue = timeCell.textContent;
-  const [hours, minutes] = timeValue.split(":").map(Number);
-
-  const lateMinutes = (hours - 9) * 60 + minutes;
-
-  if (lateMinutes > 0) {
-    const updatedTimeValue = `${timeValue} (${formatLateMinutes(lateMinutes)})`;
-    timeCell.textContent = updatedTimeValue;
-  }
-});
-
-function formatLateMinutes(minutes) {
-  const hours = Math.floor(minutes / 60);
-  const remainingMinutes = minutes % 60;
-  return `${hours}:${remainingMinutes.toString().padStart(2, "0")}`;
-}
 
 </script>
 {% endblock %}

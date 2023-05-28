@@ -96,6 +96,7 @@ def admin(request):
 
     visits = Visit.objects.all()
     visits = visits.order_by('-date')
+
     if sort_by == 'first_name':
         visits = visits.order_by('user__first_name')
     elif sort_by == 'last_name':
@@ -106,6 +107,8 @@ def admin(request):
         visits = visits.order_by('arrival_time')
     elif sort_by == 'living_time':
         visits = visits.order_by('leaving_time')
+    elif sort_by == 'working_time':
+        visits = visits.order_by('working_time')
     if search_query:
         visits = visits.filter(
             Q(user__first_name__icontains=search_query) |  # Filter by name containing the search query
