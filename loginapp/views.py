@@ -11,9 +11,18 @@ from django.core.cache import cache
 from django.template import loader
 from django.db.models import Q
 from .forms import UserFilterForm
-from configs.settings import HOSTNAME
+from openpyxl import Workbook
+from io import BytesIO
 
 
+def superuser_required(view_func):
+    code = cache.get('code')
+
+    actual_decorator = user_passes_test(
+        lambda u: u.is_superuser,
+        login_url=f'/check/{code}'
+    )
+    return actual_decorator(view_func)
 
 
 def base(request):
@@ -88,18 +97,18 @@ def qr(request):
     return render(request, 'loginapp/qr.html', {'image': image})
 
 
-@user_passes_test(lambda u: u.is_superuser)
+@superuser_required
 def ceramic_admin_view(request):
     form = UserFilterForm(request.GET or None)
     search_query = request.GET.get('search', '')
 
     # Retrieve the date filter from the request GET parameters
-
     date_filter = request.GET.get('date', '')
     sort_by = request.GET.get('sort_by', '')
 
     visits = Visit.objects.all()
     visits = visits.order_by('-date')
+
     if sort_by == 'first_name':
         visits = visits.order_by('user__first_name')
     elif sort_by == 'last_name':
@@ -110,10 +119,14 @@ def ceramic_admin_view(request):
         visits = visits.order_by('arrival_time')
     elif sort_by == 'living_time':
         visits = visits.order_by('leaving_time')
+    elif sort_by == 'working_time':
+        visits = visits.order_by('working_time')
+
     if search_query:
         visits = visits.filter(
-            Q(user__first_name__icontains=search_query) |  # Filter by name containing the search query
-            Q(date__icontains=search_query)  # Filter by date containing the search query
+            Q(user__first_name__icontains=search_query) |
+            Q(user__last_name__icontains=search_query) |
+            Q(date__icontains=search_query)
         )
 
     if date_filter:
@@ -124,5 +137,40 @@ def ceramic_admin_view(request):
         if selected_user:
             visits = visits.filter(user=selected_user)
 
-    context = {'visits': visits, 'form': form}
+    if request.GET.get('download'):
+        if search_query:  # Применяем фильтрацию поиска только если есть параметр поиска
+            visits = visits.filter(
+                Q(user__first_name__icontains=search_query) |
+                Q(date__icontains=search_query)
+            )
+
+        # Создаем новый файл Excel и добавляем данные
+        wb = Workbook()
+        ws = wb.active
+        headers = ['Фамилия', 'Имя', 'Время прибытия', 'Время ухода', 'Время работы', 'Время опоздания', 'Переработки']
+        ws.append(headers)
+        for obj in visits:
+            row = [obj.user.last_name, obj.user.first_name, obj.arrival_time, obj.leaving_time, obj.working_time,
+                   obj.lateness, obj.recycling]
+            ws.append(row)
+
+        # Генерируем файл Excel в памяти и создаем HTTP-ответ для скачивания файла
+        file_stream = BytesIO()
+        wb.save(file_stream)
+        file_stream.seek(0)
+
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename=report.xlsx'
+        response.write(file_stream.read())
+        return response
+
+    context = {
+        'visits': visits,
+        'form': form,
+        'search_query': search_query,
+        'date_filter': date_filter,
+        'sort_by': sort_by
+    }
     return render(request, 'loginapp/admin.html', context)
+
+

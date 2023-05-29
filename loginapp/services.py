@@ -12,7 +12,6 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import user_passes_test
 
 
-
 def set_url():
     code = randint(1, 40000)
     return code
