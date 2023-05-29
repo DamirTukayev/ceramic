@@ -35,7 +35,7 @@ def generate_qr():
     url = f'{HOSTNAME}/{code}/'
     img = qrcode.make(url)
     filename = f'{datetime.now().date()}.png'
-    img.save(os.path.join(settings.MEDIA_ROOT + '/qr/', filename))
+    img.save(os.path.join(settings.MEDIA_ROOT, 'qr', filename))
     return cache.set('code', code)
 
 
