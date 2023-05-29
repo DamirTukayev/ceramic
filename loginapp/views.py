@@ -103,7 +103,8 @@ def ceramic_admin_view(request):
     search_query = request.GET.get('search', '')
 
     # Retrieve the date filter from the request GET parameters
-    date_filter = request.GET.get('date', '')
+    since_date_filter = request.GET.get('date1', '')
+    before_date_filter = request.GET.get('date2', '')
     sort_by = request.GET.get('sort_by', '')
 
     visits = Visit.objects.all()
@@ -129,9 +130,15 @@ def ceramic_admin_view(request):
             Q(date__icontains=search_query)
         )
 
-    if date_filter:
-        visits = visits.filter(date=date_filter)
-
+    if since_date_filter!='':
+        visits = visits.filter(date__gte=since_date_filter)
+        if before_date_filter!='':
+            visits = visits.filter(date__gte=since_date_filter, date__lte=before_date_filter)
+        else:
+            visits = visits.filter(date=since_date_filter)
+    else:
+        if before_date_filter != '':
+            visits = visits.filter(date__lte=before_date_filter)
     if form.is_valid():
         selected_user = form.cleaned_data['users']
         if selected_user:
@@ -168,7 +175,8 @@ def ceramic_admin_view(request):
         'visits': visits,
         'form': form,
         'search_query': search_query,
-        'date_filter': date_filter,
+        'since_date_filter': since_date_filter,
+        'before_date_filter': before_date_filter,
         'sort_by': sort_by
     }
     return render(request, 'loginapp/admin.html', context)

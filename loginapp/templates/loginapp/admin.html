@@ -14,10 +14,11 @@
     </select>
   
     <input type="text" name="search" placeholder="Поиск по имени или дате" value="{{ request.GET.search }}">
-    <input type="date" name="date" value="{{ request.GET.date }}">
+    <input type="date" name="date1" value="{{ request.GET.date }}">
+    <input type="date" name="date2" value="{{ request.GET.date }}">
     <button type="submit">Поиск</button>
     <a href="{% url 'admin' %}"><button type="button" id="reset-button">Сбросить</button></a>
-<a href="{% url 'admin' %}?search={{ search_query }}&date={{ date_filter }}&sort_by={{ sort_by }}&users={{ form.users.value }}&download=True" class="btn btn-primary">Скачать отчет</a>
+<a href="{% url 'admin' %}?search={{ search_query }}&date1={{ since_date_filter }}&date2={{before_date_filter}}&sort_by={{ sort_by }}&users={{ form.users.value }}&download=True" class="btn btn-primary">Скачать отчет</a>
 
 
 

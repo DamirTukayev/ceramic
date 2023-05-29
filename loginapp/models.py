@@ -4,10 +4,10 @@ from datetime import datetime, time
 # Create your models here.
 
 class Visit(models.Model):
-    user = models.ForeignKey(User, on_delete=models.PROTECT)
-    date = models.DateField(auto_now_add=True)
-    arrival_time = models.TimeField(auto_now_add=True)
-    leaving_time = models.TimeField(blank=True, null=True)
+    user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Юзер')
+    date = models.DateField(auto_now_add=True, verbose_name='дата')
+    arrival_time = models.TimeField(auto_now_add=True, verbose_name='Дата прихода')
+    leaving_time = models.TimeField(blank=True, null=True, verbose_name=' Дата ухода')
 
     @property
     def working_time(self):
@@ -28,7 +28,8 @@ class Visit(models.Model):
             return formatted_time
 
         return 0  # If either arrival_time or leaving_time is missing, return None
-    
+
+    working_time.fget.short_description = 'Время работы'
     @property
     def lateness(self):
         if self.arrival_time and self.arrival_time > time(hour=9):
@@ -48,7 +49,8 @@ class Visit(models.Model):
             return formatted_time
 
         return 0
-    
+
+    lateness.fget.short_description = 'Опоздание'
     @property
     def recycling(self):
         if self.leaving_time and self.leaving_time > time(hour=18):
@@ -74,3 +76,10 @@ class Visit(models.Model):
             return formatted_time
 
         return 0
+
+    recycling.fget.short_description = 'Переработки'
+
+
+    class Meta:
+        verbose_name = 'Таблица посещений'
+        verbose_name_plural = 'Таблица посещений'
