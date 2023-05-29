@@ -6,14 +6,14 @@
 
 <div class="admin-page">
   <form id="filter-form" method="GET" action="{% url 'admin' %}" class="form-table">
-    <select name="users">
+    <select name="users" class="code-block">
       <option value="">Выберите пользователя</option>
       {% for user in form.users.field.queryset %}
         <option value="{{ user.id }}">{{ user.last_name }}</option>
       {% endfor %}
     </select>
   
-    <input type="text" name="search" placeholder="Поиск по имени или дате" value="{{ request.GET.search }}">
+    <input type="text" name="search" placeholder="Поиск по имени" value="{{ request.GET.search }}">
     <input type="date" name="date1" value="{{ request.GET.date }}">
     <input type="date" name="date2" value="{{ request.GET.date }}">
     <button type="submit">Поиск</button>
