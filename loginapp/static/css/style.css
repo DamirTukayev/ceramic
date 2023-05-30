@@ -108,11 +108,28 @@ tbody td:last-child {
 }
 .form-table {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
+  justify-content: center;
   margin-bottom: 20px;
   gap: 20px;
   padding-top: 40px;
+}
+
+#filter-form > input[type=date]:nth-child(3)::before{
+  content: 'От';
+  position: absolute;
+  top: -17px;
+  left: 0;
+  color: #616161;
+}
+
+#filter-form > input[type=date]:nth-child(4)::before{
+  content: 'До';
+  position: absolute;
+  top: -17px;
+  left: 0;
+  color: #616161;
 }
 
 .form-table input[type="text"],
@@ -121,7 +138,8 @@ tbody td:last-child {
   border: 1px solid #ccc;
   border-radius: 4px;
   font-family: Roboto, Arial, sans-serif;
-  width: 400px;
+  position: relative;
+  overflow: visible;
 }
 
 .form-table input[type="text"]::placeholder,
@@ -142,6 +160,25 @@ tbody td:last-child {
 
 .form-table button:hover {
   background-color: #1976d2;
+}
+
+.code-block {
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.code-block select {
+  width: 100%;
+  padding: 5px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.code-block option {
+  padding: 5px;
 }
 
 @media (max-width: 700px) { 
