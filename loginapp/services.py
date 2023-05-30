@@ -45,6 +45,6 @@ def clearMedia():
 
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(generate_qr, 'interval', seconds=10)
+scheduler.add_job(generate_qr, 'interval', seconds=17)
 scheduler.add_job(clearMedia, 'cron', hour=0)
 scheduler.start()
