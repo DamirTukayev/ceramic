@@ -296,5 +296,5 @@ devenv = ["black", "check-manifest", "flake8", "pyroma", "pytest (>=4.3)", "pyte
 
 [metadata]
 lock-version = "2.0"
-python-versions = "^3.10"
+python-versions = "^3.8"
 content-hash = "179d2815e6651ca6496bbe126210b561323e6a690197fba8449594cdcb522827"
