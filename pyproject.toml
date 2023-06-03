@@ -5,7 +5,7 @@ description = ""
 authors = ["DarthZiel <Studerzhan@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.8"
 django = "^4.2"
 qrcode = "^7.4.2"
 apscheduler = "^3.10.1"
