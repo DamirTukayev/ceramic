@@ -8,7 +8,7 @@ SECRET_KEY = 'djangFEESESFESFEFSEfseesfoBigDick-inseqz-vusb9u'
 
 DEBUG = False
 
-ALLOWED_HOST = ['http://185.111.106.153/']
+ALLOWED_HOST = ['*']
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIR = [STATIC_DIR]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
