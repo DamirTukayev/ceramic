@@ -1,4 +1,2 @@
 bind = '127.0.0.1:8000'
-workers = 1
-user = 'root'
-time_out = 120
+workers = 3
