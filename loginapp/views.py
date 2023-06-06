@@ -16,7 +16,7 @@ from io import BytesIO
 
 
 def superuser_required(view_func):
-    code = UniqueLink.objects.all().last()
+    code = UniqueLink.objects.order_by('-id').first()
     actual_decorator = user_passes_test(
         lambda u: u.is_superuser,
         login_url=f'/check/{code}'
@@ -29,7 +29,7 @@ def base(request):
 
 
 def index(request, secret_key):
-    code = UniqueLink.objects.all().last()
+    code = UniqueLink.objects.order_by('-id').first()
     if secret_key == code:
         if request.user.is_authenticated == False:
             if request.method == 'POST':

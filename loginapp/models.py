@@ -1,13 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime, time
-<<<<<<< HEAD
 # Create your models here.
 
 
 class UniqueLink(models.Model):
     code =  models.CharField(max_length=10)
-
+    def __str__(self):
+        return self.code
 class Visit(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Юзер')
     date = models.DateField(auto_now_add=True, verbose_name='дата')
