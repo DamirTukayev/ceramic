@@ -1,19 +1,23 @@
 from django.urls import reverse
-from configs.prod_settings import MEDIA_ROOT
+from configs.settings import MEDIA_ROOT
 import qrcode
 import os
 from datetime import datetime
 from django.conf import settings
-from random import randint
+import random
 from apscheduler.schedulers.background import BackgroundScheduler
 from django.core.cache import cache
 from .models import User
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import user_passes_test
+import string
 from .models import UniqueLink
 
+
 def generate_unique_link():
-    unique_link = UniqueLink.objects.create()
+    characters = string.digits + string.ascii_letters
+    code = random.sample(characters, 6)
+    unique_link = UniqueLink.objects.create(code=code)
     return unique_link.code
 
 
@@ -39,7 +43,6 @@ def clearMedia():
 
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(generate_qr, 'interval', seconds=27)
 scheduler.add_job(generate_qr, 'interval', seconds=60)
 scheduler.add_job(clearMedia, 'cron', hour=0)
 scheduler.start()

@@ -122,19 +122,6 @@ apscheduler = ">=3.2,<4.0"
 django = ">=3.2"
 
 [[package]]
-name = "django-uuidfield"
-version = "0.5.0"
-description = "UUIDField in Django"
-optional = false
-python-versions = "*"
-files = [
-    {file = "django-uuidfield-0.5.0.tar.gz", hash = "sha256:ec7db94ff6fc5b2a2f8edf6a9ab29b401a6a63d4523840fa0a3f1286ea45de86"},
-]
-
-[package.dependencies]
-django = "*"
-
-[[package]]
 name = "et-xmlfile"
 version = "1.1.0"
 description = "An implementation of lxml.xmlfile for the standard library"
@@ -310,4 +297,4 @@ devenv = ["black", "check-manifest", "flake8", "pyroma", "pytest (>=4.3)", "pyte
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "f9e3693e3197f16443b85142fed83151e9be3065477575df1f7dcafa9f2581b2"
+content-hash = "f36f9ee289be67b205566edb31a08c0ebedb5b4c1a6acb0ce2f94f43f4b1ced3"
