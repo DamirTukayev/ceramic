@@ -32,7 +32,7 @@ def check_status(username):
 
 def generate_qr():
     code = set_url()
-    url = f'{HOSTNAME}/{code}/'
+    url = f'185.111.106.153/check/{code}'
     img = qrcode.make(url)
     filename = f'{datetime.now().date()}.png'
     img.save(os.path.join(settings.MEDIA_ROOT, 'qr', filename))
@@ -45,6 +45,6 @@ def clearMedia():
 
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(generate_qr, 'interval', seconds=17)
+scheduler.add_job(generate_qr, 'interval', seconds=60)
 scheduler.add_job(clearMedia, 'cron', hour=0)
 scheduler.start()

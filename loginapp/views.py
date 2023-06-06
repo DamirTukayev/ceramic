@@ -17,7 +17,7 @@ from io import BytesIO
 
 def superuser_required(view_func):
     code = cache.get('code')
-
+    code =  str(code)
     actual_decorator = user_passes_test(
         lambda u: u.is_superuser,
         login_url=f'/check/{code}'
