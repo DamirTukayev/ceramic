@@ -7,4 +7,13 @@
       <div class="qr__text">Отсканируйте QR</div>
       <img src="/media/qr/{{image}}">
     </div>
+
+    <script>
+      window.addEventListener('load', function() {
+        // Обновляем страницу каждые 5 секунд
+        setInterval(function() {
+          location.reload();
+        }, 5000);
+      });
+    </script>
   {% endblock %}
