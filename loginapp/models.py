@@ -1,13 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime, time
-# Create your models here.
-from uuidfield import UUIDField
+
 
 
 class UniqueLink(models.Model):
-    code = UUIDField(auto=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    code = models.CharField(max_length=60)
 
 
 class Visit(models.Model):
@@ -92,7 +90,3 @@ class Visit(models.Model):
         verbose_name = 'Таблица посещений'
         verbose_name_plural = 'Таблица посещений'
 
-
-class UniqueLink(models.Model):
-    code = UUIDField(auto=True)
-    created_at = models.DateTimeField(auto_now_add=True)

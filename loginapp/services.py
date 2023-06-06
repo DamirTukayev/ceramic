@@ -1,5 +1,5 @@
 from django.urls import reverse
-from configs.prod_settings import MEDIA_ROOT
+from configs.settings import MEDIA_ROOT
 import qrcode
 import os
 from datetime import datetime
@@ -30,7 +30,7 @@ def generate_qr():
     img = qrcode.make(f'http://185.111.106.153/check/{uuid}')
     filename = f'{datetime.now().date()}.png'
     img.save(os.path.join(settings.MEDIA_ROOT, 'qr', filename))
-    return uuid
+
 
 
 def clearMedia():
@@ -39,7 +39,6 @@ def clearMedia():
 
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(generate_qr, 'interval', seconds=27)
 scheduler.add_job(generate_qr, 'interval', seconds=60)
 scheduler.add_job(clearMedia, 'cron', hour=0)
 scheduler.start()
