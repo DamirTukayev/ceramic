@@ -1,11 +1,11 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import user_passes_test
-from .models import Visit
+from .models import Visit, UniqueLink
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound
 from datetime import datetime, timedelta, date
-from .services import generate_qr, get_cookie, check_status
+from .services import generate_qr, check_status
 from django.urls import reverse
 from django.core.cache import cache
 from django.template import loader
@@ -17,6 +17,7 @@ from io import BytesIO
 
 def superuser_required(view_func):
     code = cache.get('code')
+    code = str(code)
     code =  str(code)
     actual_decorator = user_passes_test(
         lambda u: u.is_superuser,
@@ -30,8 +31,8 @@ def base(request):
 
 
 def index(request, secret_key):
-    code = cache.get('code')
-    if secret_key == str(code):
+    code = UniqueLink.objects.all().last()
+    if secret_key == code:
         if request.user.is_authenticated == False:
             if request.method == 'POST':
                 username = request.POST['username']
