@@ -1,5 +1,5 @@
 from django.urls import reverse
-from configs.settings import MEDIA_ROOT, HOSTNAME
+from configs.prod_settings import MEDIA_ROOT
 import qrcode
 import os
 from datetime import datetime
@@ -10,18 +10,13 @@ from django.core.cache import cache
 from .models import User
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import user_passes_test
+from .models import UniqueLink
+
+def generate_unique_link():
+    unique_link = UniqueLink.objects.create()
+    return unique_link.code
 
 
-def set_url():
-    code = randint(1, 40000)
-    return code
-
-def get_cookie(request):
-    try:
-        username = request.COOKIES["username"]
-        return username
-    finally:
-        return None
 
 
 def check_status(username):
@@ -31,16 +26,11 @@ def check_status(username):
 
 
 def generate_qr():
-    code = set_url()
-<<<<<<< HEAD
-    url = f'{HOSTNAME}/check/{code}/'
-=======
-    url = f'185.111.106.153/check/{code}'
->>>>>>> origin/deploy
-    img = qrcode.make(url)
+    uuid = generate_unique_link()
+    img = qrcode.make(f'http://185.111.106.153/check/{uuid}')
     filename = f'{datetime.now().date()}.png'
     img.save(os.path.join(settings.MEDIA_ROOT, 'qr', filename))
-    return cache.set('code', code)
+    return uuid
 
 
 def clearMedia():
@@ -49,10 +39,7 @@ def clearMedia():
 
 
 scheduler = BackgroundScheduler()
-<<<<<<< HEAD
 scheduler.add_job(generate_qr, 'interval', seconds=27)
-=======
 scheduler.add_job(generate_qr, 'interval', seconds=60)
->>>>>>> origin/deploy
 scheduler.add_job(clearMedia, 'cron', hour=0)
 scheduler.start()
