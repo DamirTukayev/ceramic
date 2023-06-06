@@ -34,7 +34,7 @@ def generate_qr():
     img = qrcode.make(f'http://185.111.106.153/check/{uuid}')
     filename = f'{datetime.now().date()}.png'
     img.save(os.path.join(settings.MEDIA_ROOT, 'qr', filename))
-    return uuid
+
 
 
 def clearMedia():

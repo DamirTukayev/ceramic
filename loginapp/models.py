@@ -1,12 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime, time
+<<<<<<< HEAD
 # Create your models here.
 
 
 class UniqueLink(models.Model):
     code =  models.CharField(max_length=10)
-   
 
 class Visit(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Юзер')
@@ -89,6 +89,3 @@ class Visit(models.Model):
     class Meta:
         verbose_name = 'Таблица посещений'
         verbose_name_plural = 'Таблица посещений'
-
-
-
