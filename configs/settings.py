@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'loginapp.apps.LoginappConfig',
     'django_apscheduler',
+    'background_task',
 ]
 
 MIDDLEWARE = [

@@ -7,7 +7,7 @@ from django.conf import settings
 from random import randint
 from apscheduler.schedulers.background import BackgroundScheduler
 from django.core.cache import cache
-from .models import User
+from .models import User, UniqueLink
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render, redirect
@@ -19,6 +19,10 @@ from .models import Visit
 from openpyxl import Workbook
 from django.db.models import Q
 from io import BytesIO
+
+def generate_unique_link():
+    unique_link = UniqueLink.objects.create()
+    return f'check/{unique_link.code}'
 
 LOGIN_TEMPLATE = 'loginapp/login.html'
 

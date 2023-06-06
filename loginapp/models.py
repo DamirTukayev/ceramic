@@ -1,6 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime, time
+import uuid
+
+class UniqueLink(models.Model):
+    code = models.UUIDField(default=uuid.uuid4, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 # Create your models here.
 
 class Visit(models.Model):
