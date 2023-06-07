@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
-from .models import Visit
+from .models import Visit, UniqueLink
 
 
 class CustomUserAdmin(UserAdmin):
@@ -18,3 +18,4 @@ class CustomVisitAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Visit, CustomVisitAdmin)
+admin.site.register(UniqueLink)

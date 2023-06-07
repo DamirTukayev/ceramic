@@ -1,31 +1,31 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import user_passes_test
-from .models import Visit
+from .models import Visit, UniqueLink
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound
 from datetime import datetime, timedelta, date
-from .services import generate_qr, get_cookie, check_status
+from .services import generate_qr, check_status
 from django.urls import reverse
 from django.core.cache import cache
 from django.template import loader
 from django.db.models import Q
 from .forms import UserFilterForm
 from openpyxl import Workbook
-from io import BytesIO
+
+
+
+def get_last():
+    code = UniqueLink.objects.order_by('-id').first()
+    print(code.code)
+    return code.code
 
 
 def superuser_required(view_func):
-    code = cache.get('code')
-<<<<<<< HEAD
-    code = str(code)
-
-=======
-    code =  str(code)
->>>>>>> origin/deploy
+    code = UniqueLink.objects.order_by('-id').first()
     actual_decorator = user_passes_test(
         lambda u: u.is_superuser,
-        login_url=f'/check/{code}'
+        login_url=f'/check/{get_last()}'
     )
     return actual_decorator(view_func)
 
@@ -35,8 +35,9 @@ def base(request):
 
 
 def index(request, secret_key):
-    code = cache.get('code')
-    if secret_key == str(code):
+    code = get_last()
+
+    if secret_key == code:
         if request.user.is_authenticated == False:
             if request.method == 'POST':
                 username = request.POST['username']
@@ -135,9 +136,9 @@ def ceramic_admin_view(request):
             Q(date__icontains=search_query)
         )
 
-    if since_date_filter!='':
+    if since_date_filter != '':
         visits = visits.filter(date__gte=since_date_filter)
-        if before_date_filter!='':
+        if before_date_filter != '':
             visits = visits.filter(date__gte=since_date_filter, date__lte=before_date_filter)
         else:
             visits = visits.filter(date=since_date_filter)
@@ -185,5 +186,3 @@ def ceramic_admin_view(request):
         'sort_by': sort_by
     }
     return render(request, 'loginapp/admin.html', context)
-
-
