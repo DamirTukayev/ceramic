@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime, time
+
+
 # Create your models here.
 
 
@@ -9,6 +11,7 @@ class UniqueLink(models.Model):
 
     def __str__(self):
         return self.code
+
 
 class Visit(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Юзер')

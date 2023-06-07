@@ -1,3 +1,5 @@
+from io import BytesIO
+
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import user_passes_test
@@ -36,7 +38,6 @@ def base(request):
 
 def index(request, secret_key):
     code = get_last()
-
     if secret_key == code:
         if request.user.is_authenticated == False:
             if request.method == 'POST':
