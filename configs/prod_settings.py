@@ -15,3 +15,14 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 CSRF_TRUSTED_ORIGINS = [
 	'http://185.111.106.153',
 ]
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'ceramic',
+        'USER': 'postgres',
+        'PASSWORD': 'qaws1234',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}

@@ -7,7 +7,7 @@ from .models import Visit, UniqueLink
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound
 from datetime import datetime, timedelta, date
-from .services import generate_qr, check_status
+from .services import check_status
 from django.urls import reverse
 from django.core.cache import cache
 from django.template import loader
@@ -18,18 +18,21 @@ from openpyxl import Workbook
 
 
 def get_last():
-    code = UniqueLink.objects.order_by('-id').first()
-    print(code.code)
+    code = UniqueLink.objects.all().order_by('-id').first()
     return code.code
 
 
 def superuser_required(view_func):
-    code = UniqueLink.objects.order_by('-id').first()
-    actual_decorator = user_passes_test(
-        lambda u: u.is_superuser,
-        login_url=f'/check/{get_last()}'
-    )
-    return actual_decorator(view_func)
+    def decorator_func(request, *args, **kwargs):
+        code = get_last()
+        print(f'{code} при декораторе')
+        actual_decorator = user_passes_test(
+            lambda u: u.is_superuser,
+            login_url=f'/check/{code}'
+        )
+        return actual_decorator(view_func)(request, *args, **kwargs)
+
+    return decorator_func
 
 
 def base(request):

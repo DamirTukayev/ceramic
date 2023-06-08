@@ -18,14 +18,6 @@ def generate_unique_link():
     characters = string.digits + string.ascii_letters
     code = random.sample(characters, 6)
     code = ''.join(code)
-    unique_link = UniqueLink.objects.create(code=code)
-
-
-
-def generate_unique_link():
-    characters = string.digits + string.ascii_letters
-    code = random.sample(characters, 6)
-    code = ''.join(code)
     UniqueLink.objects.create(code=code)
 
 
@@ -56,7 +48,6 @@ def clearMedia():
 
 scheduler = BackgroundScheduler()
 scheduler.add_job(generate_qr, 'interval', seconds=30)
-scheduler.add_job(generate_qr, 'interval', seconds=60)
 scheduler.add_job(clearMedia, 'cron', hour=0)
 scheduler.start()
 
