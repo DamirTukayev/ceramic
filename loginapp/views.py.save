@@ -1,8 +1,6 @@
-from io import BytesIO
-
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
-from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.decorators import user_passes_tes
 from .models import Visit, UniqueLink
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound
@@ -14,31 +12,24 @@ from django.template import loader
 from django.db.models import Q
 from .forms import UserFilterForm
 from openpyxl import Workbook
-
-
-
-def get_last():
-    code = UniqueLink.objects.order_by('-id').first()
-    print(code.code)
-    return code.code
+from io import BytesIO
 
 
 def superuser_required(view_func):
-    def decorator_func(request, *args, **kwargs):
-        code = get_last()
-        actual_decorator = user_passes_test(
-            lambda u: u.is_superuser,
-            login_url=f'/check/{code}'
+    code = UniqueLink.objects.all().last()
+    actual_decorator = user_passes_test(
+        lambda u: u.is_superuser,
+        login_url=f'/check/{code}'
     )
-        return actual_decorator(view_func)(request, *args, **kwargs)
-    return decorator_func
+    return actual_decorator(view_func)
+
 
 def base(request):
     return render(request, "loginapp/base.html")
 
 
 def index(request, secret_key):
-    code = get_last()
+    code = UniqueLink.objects.all().last()
     if secret_key == code:
         if request.user.is_authenticated == False:
             if request.method == 'POST':
@@ -138,9 +129,9 @@ def ceramic_admin_view(request):
             Q(date__icontains=search_query)
         )
 
-    if since_date_filter != '':
+    if since_date_filter!='':
         visits = visits.filter(date__gte=since_date_filter)
-        if before_date_filter != '':
+        if before_date_filter!='':
             visits = visits.filter(date__gte=since_date_filter, date__lte=before_date_filter)
         else:
             visits = visits.filter(date=since_date_filter)
@@ -188,3 +179,5 @@ def ceramic_admin_view(request):
         'sort_by': sort_by
     }
     return render(request, 'loginapp/admin.html', context)
+
+
