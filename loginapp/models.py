@@ -13,6 +13,10 @@ class UniqueLink(models.Model):
         return self.code
 
 
+    class Meta:
+        verbose_name = 'Уникальная ссылка'
+        verbose_name_plural = 'Уникальная ссылка'
+
 class Visit(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Юзер')
     date = models.DateField(auto_now_add=True, verbose_name='дата')
@@ -92,5 +96,8 @@ class Visit(models.Model):
     recycling.fget.short_description = 'Переработки'
 
     class Meta:
-        verbose_name = 'Таблица посещений'
-        verbose_name_plural = 'Таблица посещений'
+        verbose_name = 'Посещения'
+        verbose_name_plural = 'Посещения'
+
+    def __str__(self):
+        return f'Запись от {self.date}. Сотрудник(-ца) {self.user.last_name} {self.user.first_name}'

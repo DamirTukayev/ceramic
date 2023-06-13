@@ -63,7 +63,7 @@ def index(request, secret_key):
                 # If request method is GET, show the login form
 
         else:
-            if check_status:
+            if check_status(request.user.username):
                 return redirect(reverse('admin'))
             else:
                 return redirect(reverse('home'))

@@ -19,3 +19,10 @@ class CustomVisitAdmin(admin.ModelAdmin):
 
 admin.site.register(Visit, CustomVisitAdmin)
 admin.site.register(UniqueLink)
+
+
+admin.site.index_title = "Добро пожаловать в интерфейс администратора Ceramic!"
+
+admin.site.site_header = "Административная панель Ceramic"
+
+admin.site.site_title = "Админ панель"
