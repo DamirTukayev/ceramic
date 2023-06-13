@@ -68,7 +68,7 @@ def index(request, secret_key):
             else:
                 return redirect(reverse('home'))
         return render(request, 'loginapp/login.html')
-    message = f"Отсканируйте QR снова"
+    message = "Отсканируйте QR снова"
     template = loader.get_template('loginapp/success.html')
     url = code
     context = {
