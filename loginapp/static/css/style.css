@@ -199,3 +199,15 @@ tbody td:last-child {
     font-size: 30px;
   }
 }
+
+.admin-button{
+     padding: 12px 20px;
+    background-color: #2196f3;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
