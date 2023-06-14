@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from .models import Visit, UniqueLink
 
 
@@ -19,10 +19,10 @@ class CustomVisitAdmin(admin.ModelAdmin):
 
 admin.site.register(Visit, CustomVisitAdmin)
 admin.site.register(UniqueLink)
+admin.site.unregister(Group)
 
+admin.site.index_title = "Добро пожаловать в интерфейс администратора Ceramic Pro!"
 
-admin.site.index_title = "Добро пожаловать в интерфейс администратора Ceramic!"
-
-admin.site.site_header = "Административная панель Ceramic"
+admin.site.site_header = "Административная панель Ceramic Pro"
 
 admin.site.site_title = "Админ панель"

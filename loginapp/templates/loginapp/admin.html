@@ -1,3 +1,4 @@
+
 {% extends "loginapp/base.html" %}
 
 {% block title %}Посещение{% endblock %}
@@ -5,6 +6,11 @@
 {% block content %}
 
 <div class="admin-page">
+
+<a href="{% url 'admin:index' %}">
+  <button>Админ панель</button>
+</a>
+
   <form id="filter-form" method="GET" action="{% url 'admin' %}" class="form-table">
     <select name="users" class="code-block">
       <option value="">Выберите пользователя</option>
@@ -21,15 +27,10 @@
 <a href="{% url 'admin' %}?search={{ search_query }}&date1={{ since_date_filter }}&date2={{before_date_filter}}&sort_by={{ sort_by }}&users={{ form.users.value }}&download=True" class="btn btn-primary">Скачать отчет</a>
 
 
-<a href="{% url 'admin:index' %}">
-  <button class="subimt">Админ панель</button>
-</a>
-
 
   </form>
-  
-
-  <table>
+   
+ <table>
     <thead>
       <tr>
         <th>Имя</th>
