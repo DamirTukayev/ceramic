@@ -20,8 +20,8 @@ class UniqueLink(models.Model):
 class Visit(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Юзер')
     date = models.DateField(auto_now_add=True, verbose_name='дата')
-    arrival_time = models.TimeField(auto_now_add=True, verbose_name='Дата прихода')
-    leaving_time = models.TimeField(blank=True, null=True, verbose_name=' Дата ухода')
+    arrival_time = models.TimeField(auto_now_add=True, verbose_name='Время прихода')
+    leaving_time = models.TimeField(blank=True, null=True, verbose_name=' Время ухода')
 
     @property
     def working_time(self):

@@ -166,10 +166,10 @@ def ceramic_admin_view(request):
         # Создаем новый файл Excel и добавляем данные
         wb = Workbook()
         ws = wb.active
-        headers = ['Фамилия', 'Имя', 'Время прибытия', 'Время ухода', 'Время работы', 'Время опоздания', 'Переработки']
+        headers = ['Фамилия', 'Имя', 'Дата','Время прибытия', 'Время ухода', 'Время работы', 'Время опоздания', 'Переработки']
         ws.append(headers)
         for obj in visits:
-            row = [obj.user.last_name, obj.user.first_name, obj.arrival_time, obj.leaving_time, obj.working_time,
+            row = [obj.user.last_name, obj.user.first_name, obj.date, obj.arrival_time, obj.leaving_time, obj.working_time,
                    obj.lateness, obj.recycling]
             ws.append(row)
 

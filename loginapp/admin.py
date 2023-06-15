@@ -6,7 +6,7 @@ from django.contrib.auth.apps import AuthConfig
 
 
 AuthConfig.verbose_name = 'Сотрудники'
-admin.site.register(UniqueLink)
+
 class CustomUserAdmin(UserAdmin):
     verbose_name_plural = "Мои пользователи и группы"
     list_display = ['username', 'first_name', 'last_name', 'last_login']
@@ -17,27 +17,15 @@ class CustomUserAdmin(UserAdmin):
         ('Important dates', {'fields': ('last_login', 'date_joined')}),
     )
 
-#Сотрудники
+
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
 
 class CustomVisitAdmin(admin.ModelAdmin):
     readonly_fields = ['date', 'arrival_time', 'leaving_time', 'working_time', 'lateness', 'recycling']
-
-
-
+   # list_filter = ['date', 'arrival_time', 'leaving_time']
 admin.site.register(Visit, CustomVisitAdmin)
-
-
 admin.site.unregister(Group)
-
-
-
-
-
-
 admin.site.index_title = "Добро пожаловать в интерфейс администратора Ceramic Pro!"
-
 admin.site.site_header = "Административная панель Ceramic Pro"
-
 admin.site.site_title = "Админ панель"
