@@ -31,7 +31,7 @@ def generate_qr():
     clear_records()
     secret_key = generate_unique_link()
     #secret_key = UniqueLink.objects.order_by('-id').first()
-    img = qrcode.make(f'http://127.0.0.1/check/{secret_key}')
+    img = qrcode.make(f'http://185.111.106.153/check/{secret_key}')
     filename = f'{datetime.now().date()}.png'
     img.save(os.path.join(settings.MEDIA_ROOT, 'qr', filename))
 
@@ -47,7 +47,7 @@ def clearMedia():
 
 scheduler = BackgroundScheduler()
 scheduler.add_job(clearMedia, 'cron', hour=0)
-scheduler.add_job(generate_qr, 'interval', seconds=40)
+scheduler.add_job(generate_qr, 'interval', seconds=120)
 scheduler.start()
 
 

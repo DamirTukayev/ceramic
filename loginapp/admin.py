@@ -4,7 +4,9 @@ from django.contrib.auth.models import User, Group
 from .models import Visit
 from django.contrib.auth.apps import AuthConfig
 
-AuthConfig.verbose_name = ''
+
+AuthConfig.verbose_name = 'Сотрудники'
+
 
 class CustomUserAdmin(UserAdmin):
     verbose_name_plural = "Мои пользователи и группы"
