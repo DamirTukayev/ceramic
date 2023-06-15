@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import user_passes_test
 from .models import Visit, UniqueLink
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from datetime import datetime, timedelta, date
 from .services import check_status
 from django.urls import reverse
@@ -60,14 +60,17 @@ def index(request, secret_key):
                     # Return an 'invalid login' error message.
                     return HttpResponse("Invalid login.")
 
+            else:
                 # If request method is GET, show the login form
+                return render(request, 'loginapp/login.html')
 
         else:
+
             if check_status(request.user.username):
                 return redirect(reverse('admin'))
             else:
                 return redirect(reverse('home'))
-        return render(request, 'loginapp/login.html')
+
     message = "Отсканируйте QR снова"
     template = loader.get_template('loginapp/success.html')
     url = code
@@ -75,8 +78,8 @@ def index(request, secret_key):
         'message': message,
         'url': url
     }
-
     return HttpResponse(template.render(context, request))
+
 
 
 def home(request):

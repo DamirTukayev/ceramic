@@ -1,12 +1,12 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User, Group
-from .models import Visit
+from .models import Visit, UniqueLink
 from django.contrib.auth.apps import AuthConfig
 
 
 AuthConfig.verbose_name = 'Сотрудники'
-
+admin.site.register(UniqueLink)
 class CustomUserAdmin(UserAdmin):
     verbose_name_plural = "Мои пользователи и группы"
     list_display = ['username', 'first_name', 'last_name', 'last_login']
