@@ -7,7 +7,7 @@ from django.conf import settings
 import random
 from apscheduler.schedulers.background import BackgroundScheduler
 from django.core.cache import cache
-from .models import User
+from .models import CustomUser
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import user_passes_test
 import string
@@ -22,7 +22,7 @@ def generate_unique_link():
     return code
 
 def check_status(username):
-    user = User.objects.get(username=username)
+    user = CustomUser.objects.get(username=username)
     if user.is_superuser==True:
         return True
 

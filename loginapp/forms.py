@@ -1,8 +1,8 @@
 from django import forms
-from .models import User
+from .models import CustomUser
 
 
 
 class UserFilterForm(forms.Form):
-    users = forms.ModelChoiceField(queryset=User.objects.all(), required=False)
+    users = forms.ModelChoiceField(queryset=CustomUser.objects.all(), required=False)
 

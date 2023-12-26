@@ -1,9 +1,11 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from datetime import datetime, time
 
 
 # Create your models here.
+class CustomUser(AbstractUser):
+    is_whatchman = models.BooleanField(default=False)
 
 
 class UniqueLink(models.Model):
@@ -12,13 +14,13 @@ class UniqueLink(models.Model):
     def __str__(self):
         return self.code
 
-
     class Meta:
         verbose_name = 'Уникальная ссылка'
         verbose_name_plural = 'Уникальная ссылка'
 
+
 class Visit(models.Model):
-    user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Юзер')
+    user = models.ForeignKey(CustomUser, on_delete=models.PROTECT, verbose_name='Юзер')
     date = models.DateField(auto_now_add=True, verbose_name='дата')
     arrival_time = models.TimeField(auto_now_add=True, verbose_name='Время прихода')
     leaving_time = models.TimeField(blank=True, null=True, verbose_name=' Время ухода')

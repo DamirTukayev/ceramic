@@ -3,6 +3,7 @@
   {% block title %}Авторизация{% endblock %}
 
   {% block content %}
+{% csrf_token %}
     <form method="post" class="form">
       {% csrf_token %}
       <label for="username">Username:</label>

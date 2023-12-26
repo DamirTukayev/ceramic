@@ -123,7 +123,7 @@ hostname = socket.gethostname()
 
 # Сохраняем имя хоста в настройках
 HOSTNAME = hostname
-
+AUTH_USER_MODEL = 'loginapp.CustomUser'
 try:
     from .local_settings import *
 except ImportError:

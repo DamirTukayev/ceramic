@@ -1,9 +1,8 @@
 from io import BytesIO
 
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import User
 from django.contrib.auth.decorators import user_passes_test
-from .models import Visit, UniqueLink
+from .models import Visit, UniqueLink, CustomUser
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from datetime import datetime, timedelta, date
@@ -40,6 +39,7 @@ def base(request):
 
 def index(request, secret_key):
     code = get_last()
+    print(code)
     if secret_key == code:
         if request.user.is_authenticated == False:
             if request.method == 'POST':
@@ -85,7 +85,7 @@ def index(request, secret_key):
 def home(request):
     user_id = request.user.id
     username = request.user.username
-    user = User.objects.get(id=user_id)
+    user = CustomUser.objects.get(id=user_id)
     current_date = date.today()
     todayVisit = Visit.objects.filter(Q(user=user) & Q(date=current_date))
     if todayVisit.exists() == False:
